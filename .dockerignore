@@ -1,0 +1,35 @@
+# Dependencies & build artifacts
+node_modules
+.next
+out
+
+# Environment files — NEVER commit secrets
+.env
+.env.local
+.env*.local
+
+# Version control
+.git
+.gitignore
+
+# Dev & test files
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+vitest.config.ts
+
+# Documentation & design files
+*.docx
+*.docx.txt
+*.py
+
+# Editor & OS files
+.DS_Store
+*.log
+.vscode
+.idea
+Thumbs.db
+
+# Docker itself
+Dockerfile
+.dockerignore
