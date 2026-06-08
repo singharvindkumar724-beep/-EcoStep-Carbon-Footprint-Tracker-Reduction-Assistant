@@ -11,10 +11,10 @@
 # ─────────────────────────────────────────────────────────────────
 
 substitutions:
-  _PROJECT_ID: "YOUR_PROJECT_ID"      # ← Replace with your GCP Project ID
-  _REGION: "us-central1"              # ← Change to asia-south1 for Mumbai
+  _PROJECT_ID: "ecostep-498816"           # GCP Project ID
+  _REGION: "asia-south1"                  # Mumbai — lowest latency from India
   _SERVICE: "ecostep"
-  _IMAGE: "us-central1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app"
+  _IMAGE: "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app"
 
 steps:
   # Step 1: Build the Docker image
@@ -60,8 +60,8 @@ steps:
 
 # Store the built image in Artifact Registry
 images:
-  - "${_IMAGE}:${SHORT_SHA}"
-  - "${_IMAGE}:latest"
+  - "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app:${SHORT_SHA}"
+  - "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app:latest"
 
 options:
   logging: CLOUD_LOGGING_ONLY
