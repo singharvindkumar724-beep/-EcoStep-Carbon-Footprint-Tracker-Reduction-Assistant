@@ -22,8 +22,6 @@ steps:
     args:
       - build
       - -t
-      - "${_IMAGE}:${SHORT_SHA}"
-      - -t
       - "${_IMAGE}:latest"
       - .
     id: "build-image"
@@ -32,8 +30,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args:
       - push
-      - "--all-tags"
-      - "${_IMAGE}"
+      - "${_IMAGE}:latest"
     id: "push-image"
     waitFor: ["build-image"]
 
@@ -45,7 +42,7 @@ steps:
       - run
       - deploy
       - "${_SERVICE}"
-      - --image=${_IMAGE}:${SHORT_SHA}
+      - --image=${_IMAGE}:latest
       - --region=${_REGION}
       - --platform=managed
       - --allow-unauthenticated
@@ -60,7 +57,6 @@ steps:
 
 # Store the built image in Artifact Registry
 images:
-  - "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app:${SHORT_SHA}"
   - "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app:latest"
 
 options:
