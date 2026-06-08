@@ -1,20 +1,10 @@
 # ─────────────────────────────────────────────────────────────────
 # Cloud Build CI/CD pipeline for EcoStep → Cloud Run
+# Project: ecostep-498816  |  Region: asia-south1 (Mumbai)
 #
 # Usage:
 #   gcloud builds submit --config cloudbuild.yaml
-#
-# Required substitutions (set via --substitutions flag or Cloud Build trigger):
-#   _PROJECT_ID  : Your GCP Project ID  (e.g. my-project-123456)
-#   _REGION      : Cloud Run region      (default: us-central1)
-#   _SERVICE     : Cloud Run service name (default: ecostep)
 # ─────────────────────────────────────────────────────────────────
-
-substitutions:
-  _PROJECT_ID: "ecostep-498816"           # GCP Project ID
-  _REGION: "asia-south1"                  # Mumbai — lowest latency from India
-  _SERVICE: "ecostep"
-  _IMAGE: "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app"
 
 steps:
   # Step 1: Build the Docker image
@@ -22,7 +12,7 @@ steps:
     args:
       - build
       - -t
-      - "${_IMAGE}:latest"
+      - "asia-south1-docker.pkg.dev/ecostep-498816/ecostep/app:latest"
       - .
     id: "build-image"
 
@@ -30,7 +20,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args:
       - push
-      - "${_IMAGE}:latest"
+      - "asia-south1-docker.pkg.dev/ecostep-498816/ecostep/app:latest"
     id: "push-image"
     waitFor: ["build-image"]
 
@@ -41,9 +31,9 @@ steps:
     args:
       - run
       - deploy
-      - "${_SERVICE}"
-      - --image=${_IMAGE}:latest
-      - --region=${_REGION}
+      - "ecostep"
+      - --image=asia-south1-docker.pkg.dev/ecostep-498816/ecostep/app:latest
+      - --region=asia-south1
       - --platform=managed
       - --allow-unauthenticated
       - --port=8080
@@ -57,7 +47,7 @@ steps:
 
 # Store the built image in Artifact Registry
 images:
-  - "asia-south1-docker.pkg.dev/${_PROJECT_ID}/ecostep/app:latest"
+  - "asia-south1-docker.pkg.dev/ecostep-498816/ecostep/app:latest"
 
 options:
   logging: CLOUD_LOGGING_ONLY
