@@ -1,0 +1,319 @@
+🌿
+EcoStep
+Carbon Footprint Tracker & Reduction Assistant
+Product Requirements Document  ·  Version 1.0
+
+Prepared for: Hackathon Submission  |  Role: Senior Product Manager
+Document Status: Final Draft  |  Target Platform: Web App (PWA)
+
+1. Executive Summary
+EcoStep is a web-based, AI-powered carbon footprint tracker that helps individuals understand, monitor, and reduce their personal environmental impact through guided daily actions and hyper-personalized insights. Unlike generic carbon calculators that give users a number and leave them stranded, EcoStep creates a continuous feedback loop — connecting daily habits to climate impact and translating that impact into concrete, achievable next steps.
+
+The product is designed to be the intelligent climate companion that general consumers never had: approachable, motivating, and genuinely useful — not guilt-inducing or overwhelming.
+
+2. Problem Statement
+2.1  The Core Problem
+Climate anxiety is rising, but individual action remains paralysed. Most people know they should reduce their carbon footprint, but three friction points stop them cold:
+Lack of visibility — they cannot see how their daily choices (diet, transport, shopping) actually translate into CO₂ emissions.
+Overwhelm — when they do look it up, the data is complex, guilt-laden, and disconnected from their personal context.
+No personalised guidance — generic tips like 'drive less' or 'eat less meat' are not actionable without context of what would actually move the needle for that individual.
+
+2.2  Why Now
+Global search interest in 'carbon footprint calculator' has grown 3× in 5 years.
+Younger demographics (18–35) report high climate concern but low confidence in their ability to act.
+AI now makes truly personalised, conversational guidance economically viable at scale.
+This challenge vertical directly aligns with the hackathon brief: smart, dynamic assistant with logical decision-making based on user context.
+
+3. Target Users & Personas
+3.1  Primary Persona — The Climate-Aware Millennial
+Attribute
+Detail
+Name
+Riya, 27
+Location
+Urban India / Global metros
+Occupation
+Software professional, remote-first
+Climate attitude
+Cares deeply, overwhelmed by complexity, wants to do right but does not know where to start
+Devices
+Laptop + mobile; comfortable with web apps
+Key frustration
+Generic advice that ignores her lifestyle — she already uses public transit but eats meat daily
+Goal
+Understand her actual footprint and take 2–3 high-impact actions this month
+
+3.2  Secondary Persona — The Sustainability-Curious Student
+Age 18–24, college or early career
+High digital fluency, low disposable income
+Motivated by peer influence and social sharing of progress
+Needs: simple onboarding, low effort to log activities, gamification
+
+3.3  Out of Scope (v1 Users)
+Enterprises or organisations tracking corporate emissions
+Policy makers or researchers requiring certified methodological accuracy
+Users in regions with no digital access
+
+4. Core Features
+4.1  Feature Classification Framework
+Features are classified as Must-Have (MVP critical — without these the product does not work) or Nice-to-Have (valuable additions for v1.1+ that should be designed for but not built in sprint 1).
+
+Feature
+Classification
+Description / User Value
+AI-Powered Onboarding Quiz
+MUST-HAVE
+5-minute guided quiz capturing user's lifestyle: diet, transport, home energy, shopping habits. AI uses responses to generate a personalised baseline carbon score (kg CO₂e/year).
+Carbon Dashboard
+MUST-HAVE
+Central home screen showing total footprint score, breakdown by category (food, travel, home, goods), trend line over time, and comparison to national/global averages.
+Activity Logging
+MUST-HAVE
+Quick-log interface for daily activities. Users can log flights, car trips, meals, and purchases. AI auto-suggests emission values; user can confirm or adjust.
+AI Insight Engine
+MUST-HAVE
+Core differentiator. After each log or weekly, the AI analyses the user's specific profile and identifies the single highest-impact action they can take, with a personalised explanation and step-by-step guide.
+Action Library
+MUST-HAVE
+Curated, searchable database of 50+ emission-reduction actions organised by category. Each action shows estimated CO₂ savings, difficulty rating, cost implication, and relevance score for the user.
+Progress Tracker
+MUST-HAVE
+Visual graph showing footprint reduction over time. Celebrates milestones (first 10 kg saved, 1 month streak). Keeps users returning to log and reflect.
+Responsive Web App (PWA)
+MUST-HAVE
+Fully functional on desktop and mobile browsers. Installable as PWA. No native app store submission needed for MVP — critical for hackathon repo deployment.
+Social Sharing & Challenges
+NICE-TO-HAVE
+Users can share their footprint milestones or challenge friends to a 30-day reduction sprint. Drives organic growth and social accountability.
+Offset Marketplace
+NICE-TO-HAVE
+Integration with vetted carbon offset projects (tree planting, renewable energy). Users can neutralise residual emissions with in-app purchases.
+Receipt / Bill Scanner
+NICE-TO-HAVE
+Camera or upload feature to scan utility bills and shopping receipts. AI extracts and auto-logs emissions data, removing manual logging friction.
+Household Mode
+NICE-TO-HAVE
+Multiple user profiles under one household. Aggregated family footprint view useful for families and couples making joint decisions.
+Push Notifications
+NICE-TO-HAVE
+Gentle daily or weekly nudges via PWA push or email. Reminders to log, weekly summary, and insight delivery.
+Third-Party Integrations
+NICE-TO-HAVE
+OAuth connections to Google Maps (auto-detect travel), bank/UPI APIs (spending analysis), and smart meter data for automatic energy logging.
+
+5. User Flow — End to End
+5.1  First-Time User Journey
+
+LANDING PAGE — User arrives via link/search. Clear headline ('Know your carbon footprint in 5 minutes'). Single CTA: 'Get My Score'. No login required to start.
+ONBOARDING QUIZ (Steps 1–5) — AI-guided conversational quiz: (1) Location & household size, (2) Transport habits, (3) Diet & food preferences, (4) Home energy & heating type, (5) Shopping & flying frequency. Progress bar shown. Each question has smart defaults to reduce drop-off.
+RESULTS REVEAL — Animated score reveal: 'Your estimated annual footprint is X kg CO₂e.' Contextualised: 'This is Y% above/below the Indian average of Z kg.' Breakdown donut chart by category. Strong hook before asking for sign-up.
+SOFT SIGN-UP GATE — 'Save your score and get your personalised action plan.' Email + password or Google OAuth. Minimal friction — email optional; users can proceed as guest with localStorage persistence.
+DASHBOARD (Home) — Personalised dashboard loads. Shows: score, top 3 AI-recommended actions, streak tracker, quick-log shortcuts.
+FIRST AI INSIGHT — Proactive: 'Based on your profile, switching to a plant-based diet 3 days/week would save ~450 kg CO₂e/year — here is how to start.' Contextual, not generic.
+
+5.2  Returning User Journey
+LOGIN — One-click Google OAuth or remembered session.
+QUICK LOG — 'What did you do today?' — User taps activity type (drove to work, had a steak, ordered online). AI auto-fills estimated CO₂; user confirms. 30-second task.
+UPDATED DASHBOARD — Score updates in real-time. Trend line shifts. New insight unlocked if behaviour pattern detected.
+ACTION TAKEN — User marks an action as 'Started' or 'Completed'. Footprint projection updates to show future impact of sustained habit.
+WEEKLY REVIEW — AI-generated weekly digest: what changed, what improved, one focus for next week.
+
+6. Minimum Viable Product (MVP) Definition
+6.1  MVP Scope
+The MVP is the smallest version of EcoStep that delivers genuine value to a first-time user and demonstrates the core AI intelligence loop to evaluators. It must be completable in a hackathon sprint, deployable from a single GitHub repository, and impressive enough to score high on code quality, accessibility, and AI logic.
+
+6.2  MVP Feature Set
+MVP Module
+What Gets Built
+Onboarding Quiz
+5-step conversational form with carbon calculation logic. Score computed client-side using IPCC-referenced emission factors.
+Carbon Score Engine
+JavaScript/Python calculation module. Emission factors per activity category. Outputs kg CO₂e/year per category and total.
+AI Insight Engine
+Claude API (claude-sonnet-4) integration. Prompt receives user profile JSON; returns top 3 personalised actions ranked by CO₂ impact. Structured JSON response parsed into UI cards.
+Dashboard UI
+Responsive React/HTML dashboard. Donut chart (recharts or Chart.js) for category breakdown. Line chart for trend over time. Clean, accessible design.
+Activity Logger
+Form with dropdowns for activity type. Preset emission factors auto-fill CO₂ value. User confirms and saves to local state or simple backend.
+Action Library
+Static JSON of 50 actions with metadata (category, CO₂ savings, difficulty, cost). Filterable list with user personalisation score overlay.
+Progress & Streaks
+Session-persisted log history. Cumulative savings counter. Simple streak badge logic (3-day, 7-day, 30-day).
+Authentication (optional)
+Optional Google OAuth or email. App functions without it (localStorage fallback) to remove sign-up friction for demo.
+
+6.3  Tech Stack Recommendation
+Frontend: React (Vite) + Tailwind CSS — fast, modern, evaluator-friendly
+AI: Anthropic Claude API (claude-sonnet-4-20250514) for insight generation
+Charts: Recharts or Chart.js — lightweight, accessible
+Storage: localStorage for MVP; Firebase Firestore for optional persistence
+Hosting: Vercel or Netlify (free tier, single-command deploy from GitHub)
+Emission data: Custom JSON based on IPCC AR6 emission factors (publicly available)
+
+7. Success Metrics
+7.1  Hackathon Evaluation Alignment
+The following metrics map directly to the seven evaluation focus areas stated in the hackathon brief. These are the primary criteria the product must satisfy.
+
+Evaluation Criterion
+What We Measure
+Target / Evidence
+Code Quality
+Structure, readability, maintainability
+Modular components, consistent naming conventions, ESLint passing, clear separation of concerns (data / logic / UI layers), no dead code
+Security
+Safe and responsible AI implementation
+No API keys in frontend code (env variables only), input sanitisation on all user inputs, rate limiting on AI calls, no PII stored without consent
+Efficiency
+Optimal resource use
+AI calls batched where possible, emission calculations cached, Lighthouse performance score > 85, initial load < 3 seconds on standard connection
+Testing
+Validation of functionality
+Unit tests for carbon calculation engine (Jest), integration test for AI insight pipeline, manual test plan documented in README for all user flows
+Accessibility
+Inclusive and usable design
+WCAG 2.1 AA compliance: keyboard navigability, ARIA labels on all interactive elements, colour contrast ratio ≥ 4.5:1, screen reader tested with NVDA/VoiceOver
+Smart AI Logic
+Logical decision-making based on user context
+AI prompt engineered to receive structured user profile; outputs ranked, personalised actions — not generic tips. Tested with 5 distinct user personas to validate differentiation
+Real-World Usability
+Practical usability for end users
+Complete user journey from landing to first insight in under 5 minutes. All core flows operable without tutorial. Mobile-responsive at 375px+ viewport
+
+7.2  Product Health KPIs (Post-Launch)
+KPI
+Target (30 days)
+Measurement Method
+Onboarding Completion Rate
+> 70%
+% of users who start quiz and reach score reveal screen
+D7 Retention
+> 25%
+Users who log at least one activity in week 2
+AI Insight Click-Through Rate
+> 40%
+% of users who click through from insight card to action detail
+Actions Marked as Started
+> 1 per active user
+Action state changes tracked per session
+Average Session Duration
+> 3 minutes
+Time from first interaction to last in a session
+Accessibility Score (Lighthouse)
+> 90
+Automated Lighthouse CI check on each deploy
+
+8. What We Are Deliberately NOT Building in V1
+Scope discipline is a competitive advantage. The following are explicitly excluded from v1 to protect delivery quality and focus:
+
+8.1  Excluded Features & Rationale
+NOT Building
+Why Not (and When to Build It)
+Native iOS / Android apps
+PWA delivers 90% of value at 10% of cost. App store approval adds delay with no hackathon benefit. Build native in v2 if user demand warrants.
+Carbon offset marketplace
+Requires vetted vendor partnerships, payment processing, legal review, and trust-building. High-risk for MVP. Introduce in v2 when user base exists.
+Corporate / team accounts
+Entirely different data model, permissions layer, and reporting needs. B2B requires a separate go-to-market. Not the target persona.
+Verified / certified accuracy
+True certified methodologies (GHG Protocol, PAS 2050) require domain-expert review and legal disclaimers. MVP uses best-effort IPCC factors with clear 'estimate' labelling.
+Receipt and bill scanning (OCR)
+Computer vision pipeline adds architectural complexity, cost, and latency. Nice-to-have for v1.1; not worth the risk in sprint 1.
+Real-time integrations (bank APIs, smart meters)
+OAuth flows with financial institutions require compliance reviews and lengthy API approval processes. Not feasible in hackathon timeline.
+Social network / community feed
+Community features require moderation infrastructure. Adds complexity without improving core value. Introduce social sharing (lightweight) in v1.1.
+Gamification leaderboards
+Public competitive leaderboards require anti-gaming logic and moderation. Simple personal streaks and badges are sufficient for v1 motivation.
+Multi-language support
+English-first for v1. Internationalisation (i18n) architecture should be designed in but strings not translated until user geography data warrants investment.
+
+9. AI Design Notes — Scoring Alignment
+Given the hackathon evaluates 'Ability to build a smart, dynamic assistant' and 'Logical decision making based on user context', the AI layer is the technical centrepiece. Below is the intended prompt architecture:
+
+9.1  Insight Engine Prompt Design
+The system prompt to Claude should instruct it to act as a climate coach. The user message should be a structured JSON object containing:
+User profile: location, household size, diet type, primary transport, home energy type
+Activity log: last 7 days of logged activities with CO₂ values
+Current footprint: total and per-category breakdown
+Actions already started or completed
+
+The AI response should return a JSON object with: (1) top 3 personalised action recommendations, each with title, estimated CO₂ saving, personalisation rationale, and step-by-step guidance; (2) one encouraging contextual observation about their progress; (3) one concrete focus for the coming week.
+
+9.2  Why This Scores High on Evaluation Criteria
+Smart AI: Personalised output derived from structured user context — not static tips
+Logical decision-making: Actions ranked by CO₂ impact × feasibility for that user's profile
+Real-world usability: Insights are actionable, specific, and presented conversationally
+Security: API key stored server-side or in env; never exposed in client bundle
+Code quality: AI integration isolated in a dedicated service module, testable independently
+
+10. Suggested Build Timeline
+Sprint Plan (Hackathon Context)
+Phase
+Timeline
+Deliverables
+Phase 1
+Hours 1–4
+Repo setup, tech stack scaffolded, emission factor JSON created, onboarding quiz UI built
+Phase 2
+Hours 5–8
+Carbon calculation engine complete + tested, dashboard UI with charts, activity logger
+Phase 3
+Hours 9–12
+Claude AI integration, insight engine prompt tested with 5 user profiles, action library
+Phase 4
+Hours 13–16
+Progress tracker, streak logic, accessibility audit (ARIA, contrast, keyboard nav)
+Phase 5
+Hours 17–20
+Unit tests written, README complete, final bug fixes, Lighthouse audit, deploy to Vercel
+
+11. Risks & Mitigations
+Risk
+Likelihood
+Mitigation
+API rate limits on Claude during demo
+Medium
+Cache AI responses by user profile hash; show cached insight if API unavailable. Always have 3 pre-generated sample insights as fallback.
+Emission factor inaccuracy challenged
+Low
+Label all figures as 'estimates based on IPCC AR6 data.' Provide source link in UI. Accuracy disclaimer in README.
+Accessibility gaps missed
+Medium
+Run Lighthouse accessibility audit as part of CI. Manual keyboard navigation test before submission. Use semantic HTML throughout.
+Scope creep in sprint
+High
+This PRD defines hard v1 boundaries. If time pressure hits, drop Social Sharing and Notifications first — core AI loop must ship.
+AI response latency (> 3s)
+Low–Medium
+Show skeleton loader immediately. Trigger AI call async on dashboard load, not on user click. Target < 2s p95 response time.
+
+Appendix — README Template for GitHub Submission
+Include the following structure in your repository README.md to satisfy the submission requirement:
+
+Vertical
+Carbon Footprint Tracker & Reduction Assistant
+
+Approach and Logic
+EcoStep uses a structured AI pipeline: user lifestyle data collected via onboarding quiz is serialised into a JSON profile and sent to the Claude API (claude-sonnet-4) with a role-specific system prompt. The model returns ranked, personalised emission-reduction actions. Emission calculations use IPCC AR6 emission factors. All AI logic is isolated in /src/services/insightEngine.js for testability.
+
+How the Solution Works
+User completes 5-step onboarding quiz. Carbon score calculated client-side.
+Dashboard loads with personalised AI insights fetched from /api/insights.
+User logs daily activities. Score updates in real time.
+AI engine re-evaluates profile weekly and refreshes recommended actions.
+Progress tracked via streak system and cumulative CO₂ savings counter.
+
+Assumptions Made
+Emission factors are estimates based on IPCC AR6 global averages, not region-specific certified values.
+User self-reported data is taken at face value; no validation of claimed behaviour.
+MVP uses localStorage for persistence; production would require authenticated backend storage.
+
+Setup Instructions
+Clone repo: git clone <repo-url>
+Install dependencies: npm install
+Add .env file: VITE_ANTHROPIC_API_KEY=your_key_here
+Run locally: npm run dev
+Run tests: npm test
+Build for production: npm run build
+
+— End of Document —

@@ -1,0 +1,432 @@
+For Antigravity, don't create 50+ tiny tickets. Create AI-coding-friendly vertical slices. Each ticket should be large enough that Codex/Claude Code can build it independently, but small enough to test. The ticket list below follows the MVP defined in your PRD: onboarding quiz, carbon score engine, AI insights, dashboard, activity logging, action library, progress tracking, PWA, and accessibility.
+EPIC 1 — Project Foundation
+Ticket FE-001: Initialize EcoStep Application
+Priority
+Must-Have
+Description
+Build the complete project foundation using:
+Next.js 15
+TypeScript
+Tailwind CSS
+shadcn/ui
+Zustand
+IndexedDB persistence
+PWA support
+Configure linting, formatting, environment variables, and folder structure.
+Acceptance Criteria
+Application starts with npm run dev
+TypeScript enabled
+Tailwind configured
+PWA manifest exists
+Service worker registered
+ESLint passes
+Build succeeds
+Dependencies
+None
+
+EPIC 2 — Landing Experience
+Ticket FE-002: Build Marketing Landing Page
+Priority
+Must-Have
+Description
+Create landing page matching EcoStep positioning.
+Sections:
+Hero
+Features
+How It Works
+AI Insights Preview
+Benefits
+Footer
+Primary CTA:
+Get My Carbon Score
+
+Acceptance Criteria
+Fully responsive
+Lighthouse >90
+CTA navigates to onboarding
+Mobile optimized
+Accessible navigation
+Dependencies
+FE-001
+
+EPIC 3 — Onboarding
+Ticket FE-003: Build Multi-Step Onboarding Quiz
+Priority
+Must-Have
+Description
+Build 5-step onboarding experience.
+Collect:
+Location
+Household Size
+Transportation Habits
+Diet Preferences
+Energy Usage
+Shopping Habits
+Flight Frequency
+Store answers in Zustand.
+Acceptance Criteria
+Progress bar visible
+Validation works
+Previous/Next navigation works
+Data persists during refresh
+Mobile friendly
+Dependencies
+FE-001
+
+EPIC 4 — Carbon Engine
+Ticket FE-004: Build Carbon Calculation Engine
+Priority
+Must-Have
+Description
+Create calculation service using emission factors.
+Calculate:
+Food emissions
+Transport emissions
+Home emissions
+Shopping emissions
+Generate:
+Annual estimate
+Monthly estimate
+Category breakdown
+Acceptance Criteria
+Calculation module isolated
+Unit tests included
+Returns structured JSON
+Handles invalid input
+Dependencies
+FE-003
+
+Ticket FE-005: Build Carbon Score Reveal Screen
+Priority
+Must-Have
+Description
+After onboarding:
+Display:
+Total footprint
+Comparison against average
+Category breakdown
+Animated reveal
+Acceptance Criteria
+Score generated from calculator
+Donut chart displayed
+Responsive layout
+CTA leads to dashboard
+Dependencies
+FE-004
+
+EPIC 5 — Dashboard
+Ticket FE-006: Build Main Dashboard Layout
+Priority
+Must-Have
+Description
+Create dashboard shell containing:
+Header
+Carbon Score Card
+AI Insights Section
+Activity Logger
+Progress Charts
+Action Library Preview
+Acceptance Criteria
+Responsive
+Mobile-first
+Sidebar on desktop
+Bottom navigation on mobile
+Dependencies
+FE-005
+
+Ticket FE-007: Build Dashboard KPI Cards
+Priority
+Must-Have
+Description
+Create reusable dashboard cards.
+Show:
+Carbon Score
+Monthly Reduction
+Actions Completed
+Current Streak
+Acceptance Criteria
+Reusable component
+Skeleton loading state
+Responsive
+Dependencies
+FE-006
+
+EPIC 6 — AI Insight Engine
+Ticket FE-008: Build Gemini AI Service
+Priority
+Must-Have
+Description
+Create backend API route integrating Gemini.
+Input:
+{
+  "profile": {},
+  "footprint": {},
+  "activities": []
+}
+
+Output:
+{
+  "recommendations": []
+}
+
+Acceptance Criteria
+Gemini key stored server-side
+Error handling implemented
+Rate limiting implemented
+Returns structured JSON
+Dependencies
+FE-004
+
+Ticket FE-009: Build AI Insight Cards
+Priority
+Must-Have
+Description
+Display personalized AI recommendations.
+Each card contains:
+Title
+Impact
+Explanation
+Estimated savings
+Action button
+Acceptance Criteria
+Data loaded from Gemini API
+Loading states
+Error states
+Mobile friendly
+Dependencies
+FE-008
+
+EPIC 7 — Activity Logging
+Ticket FE-010: Build Activity Logger
+Priority
+Must-Have
+Description
+Create quick logging system.
+Categories:
+Food
+Travel
+Home Energy
+Shopping
+User enters quantity.
+System calculates emissions automatically.
+Acceptance Criteria
+Activity saved
+Emissions calculated
+Validation implemented
+Works offline
+Dependencies
+FE-004
+
+Ticket FE-011: Build Activity History
+Priority
+Must-Have
+Description
+Display activity timeline.
+Features:
+Filter
+Search
+Sort
+Delete
+Acceptance Criteria
+Updates instantly
+Mobile responsive
+IndexedDB persistence
+Dependencies
+FE-010
+
+EPIC 8 — Action Library
+Ticket FE-012: Build Action Library
+Priority
+Must-Have
+Description
+Create searchable action database.
+Each action includes:
+CO₂ Savings
+Difficulty
+Cost
+Category
+Acceptance Criteria
+Search works
+Filters work
+Mobile responsive
+Dependencies
+FE-006
+
+Ticket FE-013: Build Personalized Action Ranking
+Priority
+Must-Have
+Description
+Rank actions according to:
+Impact × Relevance × Feasibility
+
+based on user profile.
+Acceptance Criteria
+Ranking algorithm implemented
+User-specific ordering
+Unit tests included
+Dependencies
+FE-012FE-003
+
+EPIC 9 — Progress Tracking
+Ticket FE-014: Build Progress Tracking System
+Priority
+Must-Have
+Description
+Track reduction over time.
+Display:
+Weekly progress
+Monthly progress
+Total reduction
+Acceptance Criteria
+Historical tracking works
+Data persists
+Charts render correctly
+Dependencies
+FE-010
+
+Ticket FE-015: Build Streak Engine
+Priority
+Must-Have
+Description
+Create streak tracking.
+Milestones:
+3 Days
+7 Days
+14 Days
+30 Days
+60 Days
+90 Days
+
+Acceptance Criteria
+Streak updates automatically
+Badge system works
+Dashboard integration complete
+Dependencies
+FE-014
+
+EPIC 10 — Data Persistence
+Ticket FE-016: Build IndexedDB Storage Layer
+Priority
+Must-Have
+Description
+Implement IndexedDB abstraction.
+Store:
+User Profile
+Activities
+Insights
+Goals
+Streaks
+Acceptance Criteria
+CRUD operations work
+Offline persistence works
+Refresh does not lose data
+Dependencies
+FE-001
+
+EPIC 11 — Charts & Analytics
+Ticket FE-017: Build Carbon Breakdown Charts
+Priority
+Must-Have
+Description
+Create:
+Donut Chart
+Trend Line Chart
+Reduction Chart
+using Recharts.
+Acceptance Criteria
+Accessible charts
+Responsive
+Dynamic data
+Dependencies
+FE-014
+
+EPIC 12 — PWA
+Ticket FE-018: Convert Application to PWA
+Priority
+Must-Have
+Description
+Implement installable PWA.
+Features:
+Offline support
+Service worker
+Manifest
+Install prompt
+Acceptance Criteria
+Lighthouse PWA >90
+Install works
+Offline mode works
+Dependencies
+FE-001
+
+EPIC 13 — Accessibility
+Ticket FE-019: WCAG Accessibility Compliance
+Priority
+Must-Have
+Description
+Audit and fix accessibility issues.
+Requirements:
+Keyboard navigation
+Screen reader support
+ARIA labels
+Contrast compliance
+Acceptance Criteria
+WCAG AA compliant
+Lighthouse Accessibility >90
+Dependencies
+All UI tickets
+
+EPIC 14 — Performance Optimization
+Ticket FE-020: Optimize Application Performance
+Priority
+Should-Have
+Description
+Improve loading performance.
+Tasks:
+Lazy loading
+Route splitting
+Image optimization
+Query caching
+Acceptance Criteria
+Lighthouse Performance >90
+First load <3 seconds
+Dependencies
+Core MVP complete
+
+EPIC 15 — Nice-to-Have Features
+FE-021 Social Sharing
+Priority: Nice-to-Have
+FE-022 Weekly AI Climate Report
+Priority: Nice-to-Have
+FE-023 Household Mode
+Priority: Nice-to-Have
+FE-024 Push Notifications
+Priority: Nice-to-Have
+FE-025 Google Maps Auto Travel Detection
+Priority: Nice-to-Have
+FE-026 Receipt Scanner OCR
+Priority: Nice-to-Have
+FE-027 Carbon Offset Marketplace
+Priority: Nice-to-Have
+
+Recommended Build Order for Codex
+FE-001
+FE-002
+FE-003
+FE-004
+FE-005
+FE-006
+FE-016
+FE-008
+FE-009
+FE-010
+FE-011
+FE-012
+FE-013
+FE-014
+FE-015
+FE-017
+FE-018
+FE-019
+FE-020
+
+This sequence follows the exact evaluator-critical path: Landing → Quiz → Carbon Calculation → AI Insight → Dashboard → Activity Tracking → Progress → PWA → Accessibility, which are the highest-scoring elements in your PRD.

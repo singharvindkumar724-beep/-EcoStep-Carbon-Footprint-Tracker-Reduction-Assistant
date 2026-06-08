@@ -1,0 +1,17 @@
+{
+  "name": "EcoStep Carbon Footprint Tracker",
+  "short_name": "EcoStep",
+  "description": "Your personalized AI climate reduction companion",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9FAFB",
+  "theme_color": "#16A34A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

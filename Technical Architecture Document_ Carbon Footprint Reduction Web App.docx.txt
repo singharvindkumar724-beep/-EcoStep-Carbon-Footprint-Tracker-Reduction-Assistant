@@ -1,0 +1,559 @@
+Technical Architecture Document: Carbon Footprint Reduction Web App
+Role perspective: Senior SaaS Architect
+1. Executive Summary
+This document proposes a production-ready architecture for a carbon footprint tracking platform that helps users understand, track, and reduce their emissions through personalized recommendations, habit tracking, and AI-driven insights.
+Goals
+Simple onboardingA non-expert user can estimate their footprint in under 5 minutes.
+Actionable insightsThe system converts data into specific, measurable recommendations.
+Long-term engagementUsers can track habits, progress, goals, and achievements over time.
+Scalable architectureDesigned for SaaS growth with clear separation of concerns.
+Antigravity / AI Evaluator Fit
+This design emphasizes maintainable code, practical AI usage, secure defaults, efficient resource use, accessibility, and optional Google Cloud integrations (Firebase, BigQuery, Gemini AI, Cloud Run) that align with the evaluation criteria.
+2. Recommended Tech Stack
+Layer
+Technology
+Why
+Frontend
+Next.js (TypeScript)
+Excellent DX, SSR/ISR support, SEO, routing, and strong ecosystem.
+UI Library
+Tailwind CSS + shadcn/ui
+Fast development, accessible components, easy customization.
+Backend API
+Next.js API Routes / Route Handlers
+Single repository, lower complexity for an MVP, deployable on serverless platforms.
+Database
+PostgreSQL
+Strong relational modeling, analytics-friendly, mature ecosystem.
+ORM
+Prisma
+Type-safe queries, schema migrations, excellent developer experience.
+Authentication
+NextAuth.js
+Email + Google OAuth support with minimal setup.
+AI Layer
+Gemini API (or OpenAI if preferred)
+Personalized recommendations, explanations, and coaching.
+Hosting
+Vercel or Google Cloud Run
+Easy deployment, scalability, CI/CD integration.
+Analytics
+Google Analytics + optional BigQuery
+Track engagement and product usage.
+File Storage
+Firebase Storage or S3-compatible storage
+Store avatars, exports, or future receipt uploads.
+Why this stack scores well
+Clean maintainabilityTypeScript + Prisma reduces runtime errors and improves code quality.
+SecurityAuth.js, parameterized ORM queries, environment-based secrets, and HTTPS-first deployment.
+EfficiencyServerless deployment, incremental rendering, and lean APIs keep resource usage low.
+Google integrationNative compatibility with Firebase, BigQuery, Cloud Run, and Gemini AI aligns with the evaluation rubric.
+3. High-Level Architecture
+System Components
+Web Client (Next.js)Dashboard, onboarding, tracking, goals, insights, reports.
+API LayerAuthentication, CRUD operations, calculations, AI orchestration.
+Database (PostgreSQL)Stores users, activities, emissions, goals, recommendations, and audit data.
+AI ServiceGenerates personalized reduction advice based on user patterns.
+Analytics & MonitoringUsage tracking, error reporting, performance monitoring.
+Data Flow
+Example: User logs a car trip.
+User submits trip distance.
+API validates input.
+Emission factor is retrieved (car, fuel type, etc.).
+CO₂e is calculated and stored.
+User dashboard aggregates totals.
+AI engine updates recommendations (e.g., “replace one weekly car trip with public transport”).
+4. Project Structure
+Recommended Monorepo Layout
+This structure keeps business logic out of route handlers and makes testing easier.
+
+Directory
+Description
+/apps/web
+Next.js Frontend
+/apps/api
+Backend API/serverless functions
+/packages/db
+Prisma schema and client
+/packages/ui
+Shared UI components
+/packages/types
+Shared TypeScript types
+5. Database Schema
+Core Tables
+Table
+Purpose
+users
+Application users
+profiles
+User demographic and preference data
+activity_categories
+Defines categories such as transport, energy, food, waste
+emission_factors
+Stores conversion factors (e.g., kg CO₂e per km)
+activities
+Individual user actions or consumption records
+footprint_snapshots
+Daily/weekly/monthly aggregated emissions
+goals
+User-defined reduction targets
+recommendations
+AI-generated personalized advice
+habit_streaks
+Tracks repeated eco-friendly behaviors
+notifications
+In-app reminders and alerts
+audit_logs
+Important system events for debugging/security
+Detailed Schema
+users
+Field
+Type
+Notes
+id
+UUID
+Primary key
+email
+string
+Unique
+password_hash
+string
+Nullable for OAuth users
+created_at
+timestamp
+Account creation time
+updated_at
+timestamp
+Last update time
+Relationship: One user has one profile, many activities, many goals, and many recommendations.
+profiles
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+name
+string
+User display name
+country
+string
+For regional emission factors
+household_size
+integer
+Optional
+vehicle_type
+enum
+car, bike, EV, none
+diet_type
+enum
+omnivore, vegetarian, vegan
+electricity_source
+enum
+grid, renewable, mixed
+created_at
+timestamp
+
+Purpose: Provides context for personalized recommendations and more accurate calculations.
+activity_categories
+Field
+Type
+Notes
+id
+UUID
+Primary key
+name
+string
+transport, energy, food, waste
+description
+text
+Optional help text
+Purpose: Normalized category system for analytics and filtering.
+emission_factors
+Field
+Type
+Notes
+id
+UUID
+Primary key
+category_id
+UUID
+Foreign key → activity_categories.id
+activity_name
+string
+e.g., petrol_car_km
+unit
+string
+km, kWh, kg, meal
+co2e_per_unit
+decimal
+Emission factor value
+region
+string
+Country or region code
+source
+string
+Source organization
+valid_from
+date
+Versioning support
+Purpose: Keeps calculation logic data-driven and auditable.
+activities
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+category_id
+UUID
+Foreign key → activity_categories.id
+emission_factor_id
+UUID
+Foreign key → emission_factors.id
+quantity
+decimal
+User-entered amount
+unit
+string
+Stored for consistency
+co2e_kg
+decimal
+Calculated emissions
+recorded_at
+timestamp
+When activity occurred
+created_at
+timestamp
+When record was created
+Example: 25 km car trip → 4.8 kg CO₂e.
+footprint_snapshots
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+period_type
+enum
+daily, weekly, monthly
+period_start
+date
+Start date
+period_end
+date
+End date
+total_co2e_kg
+decimal
+Aggregated total
+transport_co2e_kg
+decimal
+Category subtotal
+energy_co2e_kg
+decimal
+Category subtotal
+food_co2e_kg
+decimal
+Category subtotal
+waste_co2e_kg
+decimal
+Category subtotal
+Purpose: Fast dashboard queries and historical trend analysis.
+goals
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+title
+string
+Goal name
+target_co2e_kg
+decimal
+Reduction target
+current_co2e_kg
+decimal
+Progress tracking
+start_date
+date
+Goal start
+end_date
+date
+Goal end
+status
+enum
+active, completed, cancelled
+Purpose: Motivates users with measurable targets.
+recommendations
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+recommendation_type
+enum
+transport, energy, food, waste
+title
+string
+Short headline
+description
+text
+Detailed guidance
+estimated_savings_kg
+decimal
+Potential CO₂e savings
+priority_score
+integer
+0–100 ranking
+generated_by
+enum
+rule_engine, ai
+created_at
+timestamp
+
+Example: “Reduce red meat consumption by 2 meals/week”.
+habit_streaks
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+habit_name
+string
+e.g., “Bike to work”
+current_streak
+integer
+Current consecutive count
+best_streak
+integer
+Longest streak
+last_completed_at
+timestamp
+Last completion time
+Purpose: Gamification and retention.
+notifications
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Foreign key → users.id
+type
+enum
+reminder, achievement, recommendation
+message
+text
+Notification text
+is_read
+boolean
+Read state
+created_at
+timestamp
+
+Purpose: Engagement and reminders.
+audit_logs
+Field
+Type
+Notes
+id
+UUID
+Primary key
+user_id
+UUID
+Nullable system events
+action
+string
+Event name
+metadata
+JSONB
+Additional context
+created_at
+timestamp
+
+Purpose: Debugging, analytics, and security review.
+Relationship Summary
+6. Core Business Logic
+Emission Calculation
+Formula:
+CO₂e = Quantity × Emission Factor
+Example:
+Activity
+Car travel
+Distance
+50 km
+Emission factor
+0.192 kg CO₂e/km
+Result
+9.6 kg CO₂e
+Recommendation Engine
+Start with a rule-based engine, then optionally augment with AI.
+Rule examples
+High transport emissionsIf transport > 40% of total footprint → suggest public transit, carpooling, biking, or EV transition.
+High food emissionsIf food emissions are high and diet is omnivore → suggest reducing high-impact foods.
+High energy emissionsIf energy emissions are high → suggest LED lighting, appliance efficiency, and renewable energy options.
+AI prompt example
+7. API Design
+REST Endpoints (MVP)
+Method
+Endpoint
+Purpose
+POST
+/api/auth/register
+Create account
+POST
+/api/auth/login
+Authenticate user
+GET
+/api/footprint/current
+Current footprint summary
+GET
+/api/footprint/history
+Historical snapshots
+POST
+/api/activities
+Add activity
+GET
+/api/activities
+List activities
+PUT
+/api/activities/:id
+Update activity
+DELETE
+/api/activities/:id
+Remove activity
+GET
+/api/recommendations
+Get personalized advice
+POST
+/api/goals
+Create goal
+GET
+/api/reports/monthly
+Generate monthly report
+8. Environment Variables
+.env example
+Do not commit .env to GitHub. Add it to .gitignore.
+9. Google Services Integration
+Recommended Google Integrations
+Service
+Use
+Firebase Authentication
+Alternative to Auth.js if you want fully managed auth.
+Firebase Storage
+Store user uploads and exports.
+BigQuery
+Long-term analytics and reporting.
+Cloud Run
+Containerized deployment.
+Gemini API
+Personalized insights and coaching.
+Evaluation Advantage
+Using at least one Google service (Gemini, Firebase, or BigQuery) demonstrates integration capability, which is explicitly mentioned in the evaluation criteria.
+10. Security Considerations
+Must-have controls
+Input validationUse Zod or equivalent on every API endpoint.
+Authentication & authorizationProtect all user-specific routes.
+Rate limitingEspecially for AI endpoints.
+Secrets managementEnvironment variables only; never hardcode keys.
+SQL injection protectionPrisma parameterized queries.
+HTTPSEnforce in production.
+11. Performance & Scalability
+MVP
+Single Next.js app
+PostgreSQL database
+Serverless deployment
+Cached dashboard aggregates
+Growth stage
+Separate API service
+Redis caching
+Background jobs for report generation
+Data warehouse for analytics
+12. Testing Strategy
+Recommended coverage
+Type
+Tool
+Focus
+Unit
+Vitest or Jest
+Emission calculations
+Integration
+Supertest
+API endpoints
+E2E
+Playwright
+User journeys
+Critical tests
+Emission calculation accuracy
+Authentication flows
+Activity CRUD operations
+Goal progress tracking
+Recommendation generation
+13. Accessibility Requirements
+Include from day one
+Semantic HTML
+Keyboard navigation
+Focus states
+ARIA labels where needed
+Color contrast compliance (WCAG AA)
+Screen-reader friendly charts (text summaries)
+14. Suggested MVP Roadmap
+Phase 1: Foundation
+Auth
+Database schema
+Basic dashboard
+Activity logging
+Phase 2: Core Value
+Footprint calculations
+Historical trends
+Goals
+Rule-based recommendations
+Phase 3: AI & Engagement
+AI-generated insights
+Habit streaks
+Notifications
+Monthly reports
+Phase 4: Scale
+BigQuery analytics
+Background jobs
+Advanced benchmarking
+Team or household accounts
+15. README Outline (for Submission)
+Include these sections
+Problem Statement
+Chosen Vertical
+Architecture Overview
+Tech Stack
+Setup Instructions
+Environment Variables
+Database Setup
+Running Locally
+Testing
+AI Integration
+Assumptions & Limitations
+Recommendation
+Final Recommendation
+For the Antigravity evaluation, I would build this as a TypeScript-based Next.js + PostgreSQL + Prisma application, use Auth.js for authentication, and integrate Gemini API for personalized recommendations. This combination provides strong code quality, maintainability, security, and Google ecosystem integration while remaining simple enough to implement within a hackathon-style timeframe.
