@@ -5,7 +5,7 @@ import { TrendingDown, Check } from "lucide-react";
 import { ActionItem } from "@/data/actions";
 
 interface ActionCardProps {
-  action: ActionItem;
+  action: ActionItem & { rankScore: number };
   status: "available" | "started" | "completed" | undefined;
   onSelect: (action: ActionItem) => void;
   onToggleStatus: (actionId: string, status: "available" | "started" | "completed") => void;
