@@ -3,11 +3,20 @@ import { UserProfile } from "../types";
 import { calculateOnboardingScore } from "./carbonCalculator";
 
 /**
- * Ranks all actions based on the formula: Rank Score = Impact × Relevance × Feasibility
+ * Core algorithm for prioritizing and ranking sustainability actions.
+ * Evaluates all possible actions against the user's specific profile to output a highly personalized, sorted list.
  * 
- * - Impact: Annual CO2 savings in kg.
- * - Relevance: Scaled based on user's high-emission categories and lifestyle.
- * - Feasibility: Inverse of difficulty (easy = 1.0, medium = 0.7, hard = 0.4).
+ * Formula: Rank Score = Impact × Relevance × Feasibility
+ * 
+ * - **Impact**: The base annual CO2e savings in kg (defined in the action dictionary).
+ * - **Relevance**: A dynamic multiplier (0.0 to 2.5) calculated based on the user's current habits.
+ *   - E.g., if a user is already vegan, meat-reduction actions get a 0.0 relevance.
+ *   - E.g., if a user drives a petrol car, EV transition gets a 2.5x relevance boost.
+ * - **Feasibility**: A fractional damper representing the difficulty of the action.
+ *   - Easy = 1.0, Medium = 0.7, Hard = 0.4.
+ * 
+ * @param profile - The completed UserProfile containing dietary, travel, and energy habits.
+ * @returns A sorted array of `ActionItem` objects extended with a computed `rankScore`, descending.
  */
 export function rankSustainabilityActions(profile: UserProfile): (ActionItem & { rankScore: number })[] {
   // 1. Calculate the user's footprint breakdown to check high emission categories

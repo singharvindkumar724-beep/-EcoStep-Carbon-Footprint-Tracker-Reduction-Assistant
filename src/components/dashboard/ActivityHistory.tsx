@@ -7,44 +7,52 @@ import { Search, Trash2, Calendar } from "lucide-react";
 
 type SortOption = "newest" | "oldest" | "highest" | "lowest";
 
+/**
+ * Interactive list displaying the user's logged carbon activities.
+ * Includes capabilities to search, filter by category, sort by multiple metrics, and delete individual logs.
+ */
 export default function ActivityHistory() {
   const { activities, deleteActivity, clearActivities } = useEcoStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
 
-  // Category labels helper
-  const getSubcategoryLabel = (category: string, sub: string) => {
+  /**
+   * Retrieves the human-readable label for a specific activity subcategory from the logging dictionary.
+   */
+  const getSubcategoryLabel = (category: string, sub: string): string => {
     const factors = LOGGING_FACTORS as unknown as Record<string, Record<string, { label: string }>>;
     const info = factors[category]?.[sub];
     return info?.label || sub;
   };
 
-  // Filter & Search & Sort logic
-  const filteredActivities = activities
-    .filter((act) => {
-      const matchCat = selectedCategory === "all" || act.category === selectedCategory;
-      const labelText = getSubcategoryLabel(act.category, act.subcategory).toLowerCase();
-      const matchSearch = labelText.includes(searchQuery.toLowerCase()) || act.category.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchCat && matchSearch;
-    })
-    .sort((a, b) => {
-      if (sortBy === "newest") {
-        return new Date(b.recordedAt).getTime() - new Date(a.recordedAt).getTime();
-      }
-      if (sortBy === "oldest") {
-        return new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime();
-      }
-      if (sortBy === "highest") {
-        return b.co2e - a.co2e;
-      }
-      if (sortBy === "lowest") {
-        return a.co2e - b.co2e;
-      }
-      return 0;
-    });
+  /**
+   * Filters and sorts the global activities array based on current UI state.
+   */
+  const getProcessedActivities = () => {
+    return activities
+      .filter((act) => {
+        const matchCat = selectedCategory === "all" || act.category === selectedCategory;
+        const labelText = getSubcategoryLabel(act.category, act.subcategory).toLowerCase();
+        const matchSearch = labelText.includes(searchQuery.toLowerCase()) || act.category.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchCat && matchSearch;
+      })
+      .sort((a, b) => {
+        if (sortBy === "newest") return new Date(b.recordedAt).getTime() - new Date(a.recordedAt).getTime();
+        if (sortBy === "oldest") return new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime();
+        if (sortBy === "highest") return b.co2e - a.co2e;
+        if (sortBy === "lowest") return a.co2e - b.co2e;
+        return 0;
+      });
+  };
 
-  const formatDate = (dateStr: string) => {
+  const filteredActivities = getProcessedActivities();
+
+  /**
+   * Formats a raw ISO date string into a clean, human-readable format.
+   * e.g., "Jan 1, 10:30 AM"
+   */
+  const formatDate = (dateStr: string): string => {
     const d = new Date(dateStr);
     return d.toLocaleDateString(undefined, {
       month: "short",

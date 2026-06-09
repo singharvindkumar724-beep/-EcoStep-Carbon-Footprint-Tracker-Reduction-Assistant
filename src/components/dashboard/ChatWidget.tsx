@@ -16,6 +16,11 @@ const QUICK_CHIPS = [
   "How much CO₂ does a long flight emit?",
 ] as const;
 
+/**
+ * Floating AI Chat Interface that connects to the Google Gemini API.
+ * Provides personalized climate coaching and dynamically handles loading states,
+ * error boundaries, and auto-scrolling message feeds.
+ */
 export default function ChatWidget() {
   const { userProfile } = useEcoStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -61,6 +66,11 @@ export default function ChatWidget() {
   console.log("ChatWidget userProfile state:", userProfile);
   if (!userProfile) return null;
 
+  /**
+   * Dispatches a message to the Next.js API route and appends the AI's response.
+   * Manages the `isLoading` and `error` states automatically.
+   * @param text - The user's input string.
+   */
   const handleSendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
 
@@ -106,6 +116,9 @@ export default function ChatWidget() {
     handleSendMessage(inputVal);
   };
 
+  /**
+   * Resets the entire conversation array back to the initial welcome message.
+   */
   const handleClearChat = () => {
     if (confirm("Are you sure you want to clear your conversation history?")) {
       setMessages([
@@ -118,7 +131,11 @@ export default function ChatWidget() {
     }
   };
 
-  // Safe markdown bold/list parser
+  /**
+   * Securely parses basic markdown returned from the AI.
+   * Converts **bold** text to HTML <strong> tags and basic bullet lists to HTML dots.
+   * Uses dangerouslySetInnerHTML carefully on split lines.
+   */
   const formatMessageText = (rawText: string) => {
     let formatted = rawText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     formatted = formatted.replace(/^\*\s(.*)$/gm, "• $1");

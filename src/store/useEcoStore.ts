@@ -62,17 +62,29 @@ export const useEcoStore = create<EcoState>()(
       actionsState: {},
       goals: [],
 
+      /**
+       * Updates the temporary onboarding progress state.
+       * @param progress - Partial profile data collected during onboarding steps.
+       */
       setOnboardingProgress: (progress) =>
         set((state) => ({
           onboardingProgress: { ...state.onboardingProgress, ...progress },
         })),
 
+      /**
+       * Finalizes onboarding by saving the user profile and clearing temporary progress.
+       * @param profile - The completed UserProfile object.
+       */
       completeOnboarding: (profile) =>
         set(() => ({
           userProfile: profile,
           onboardingProgress: {},
         })),
 
+      /**
+       * Resets the entire store to its initial empty state.
+       * Useful for wiping user data or starting over.
+       */
       resetOnboarding: () =>
         set(() => ({
           userProfile: null,
@@ -84,6 +96,11 @@ export const useEcoStore = create<EcoState>()(
           goals: [],
         })),
 
+      /**
+       * Logs a new carbon-emitting or reducing activity.
+       * Automatically calculates the CO2 equivalent impact and updates streaks.
+       * @param activityData - Category, subcategory, and quantity of the activity.
+       */
       logActivity: (activityData) => {
         const co2e = calculateActivityEmissions(
           activityData.category,
@@ -106,21 +123,37 @@ export const useEcoStore = create<EcoState>()(
         getStore().updateStreaks();
       },
 
+      /**
+       * Deletes a specific logged activity by its unique ID.
+       * @param id - The ID of the activity to delete.
+       */
       deleteActivity: (id) =>
         set((state) => ({
           activities: state.activities.filter((act) => act.id !== id),
         })),
 
+      /**
+       * Clears all activity logs from the user's history.
+       */
       clearActivities: () =>
         set(() => ({
           activities: [],
         })),
 
+      /**
+       * Manually overwrites the AI insights recommendations list.
+       * @param insights - Array of new recommendation items.
+       */
       setInsights: (insights) =>
         set(() => ({
           insights,
         })),
 
+      /**
+       * Triggers a background API call to fetch personalized AI insights
+       * based on the user's current profile and recent activity logs.
+       * Falls back cleanly if the AI engine is unavailable.
+       */
       fetchInsights: async () => {
         const profile = getStore().userProfile;
         const activities = getStore().activities;
@@ -156,6 +189,11 @@ export const useEcoStore = create<EcoState>()(
         }
       },
 
+      /**
+       * Toggles the state of a specific sustainable action (e.g., active, completed).
+       * @param actionId - The unique identifier of the action.
+       * @param status - The new status of the action, or "available" to reset.
+       */
       toggleAction: (actionId, status) => {
         set((state) => {
           const nextActionsState = { ...state.actionsState };
@@ -168,6 +206,10 @@ export const useEcoStore = create<EcoState>()(
         });
       },
 
+      /**
+       * Evaluates and updates the daily logging streak.
+       * Increments the streak if logged continuously, resets if a day is missed.
+       */
       updateStreaks: () => {
         const today = getTodayString();
         const yesterday = getYesterdayString();
@@ -199,6 +241,10 @@ export const useEcoStore = create<EcoState>()(
         }));
       },
       
+      /**
+       * Creates a new user goal for reducing carbon emissions.
+       * @param goalData - The title, description, and target reduction metric.
+       */
       addGoal: (goalData) => {
         const newGoal: Goal = {
           id: Math.random().toString(36).substring(2, 9),
@@ -209,6 +255,11 @@ export const useEcoStore = create<EcoState>()(
         set((state) => ({ goals: [...state.goals, newGoal] }));
       },
 
+      /**
+       * Updates the numeric progress towards a specific goal.
+       * @param id - The ID of the goal.
+       * @param currentCo2e - The new progressed amount in kg CO2e.
+       */
       updateGoalProgress: (id, currentCo2e) => {
         set((state) => ({
           goals: state.goals.map((g) =>
@@ -217,6 +268,10 @@ export const useEcoStore = create<EcoState>()(
         }));
       },
 
+      /**
+       * Marks a specific goal as successfully completed.
+       * @param id - The ID of the goal.
+       */
       completeGoal: (id) => {
         set((state) => ({
           goals: state.goals.map((g) =>
