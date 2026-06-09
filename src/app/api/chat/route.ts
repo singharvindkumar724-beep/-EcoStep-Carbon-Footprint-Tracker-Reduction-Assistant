@@ -15,7 +15,7 @@ const MAX_REQUESTS_PER_WINDOW = 30;
 
 export async function POST(req: NextRequest) {
   let parsedMessage = "";
-  let parsedProfile: any = null;
+  let parsedProfile: { location?: string; householdSize?: number } | null = null;
   
   try {
     // 1. Rate Limiting

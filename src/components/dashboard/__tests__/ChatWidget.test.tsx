@@ -68,7 +68,7 @@ describe("ChatWidget Component", () => {
   });
 
   it("should send a message and receive a response", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reply: "Hello from AI" })
     });
@@ -103,7 +103,7 @@ describe("ChatWidget Component", () => {
   });
 
   it("should send a message using quick chips", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reply: "AI Response to chip" })
     });
@@ -124,7 +124,7 @@ describe("ChatWidget Component", () => {
   });
 
   it("should handle API error when sending message", async () => {
-    (global.fetch as any).mockRejectedValueOnce(new Error("Network Error"));
+    (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("Network Error"));
 
     render(<ChatWidget />);
     fireEvent.click(screen.getByRole("button", { name: "Open AI Climate Coach Chatbot" }));
@@ -141,7 +141,7 @@ describe("ChatWidget Component", () => {
   });
 
   it("should handle API non-200 responses", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,
       status: 429
     });
@@ -159,7 +159,7 @@ describe("ChatWidget Component", () => {
   });
 
   it("should handle missing reply field in API response", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ error: "Some weird error" }) // Missing reply
     });

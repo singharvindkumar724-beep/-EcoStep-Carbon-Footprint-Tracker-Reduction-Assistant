@@ -135,7 +135,7 @@ describe("Zustand EcoStore Tests", () => {
     expect(useEcoStore.getState().insights.length).toBe(1);
 
     // Mock fetch insights
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       json: async () => ({ recommendations: [mockInsight] })
     });
 
@@ -155,7 +155,7 @@ describe("Zustand EcoStore Tests", () => {
     useEcoStore.setState({ userProfile: { location: "US", householdSize: 1, dietType: "vegan", vehicleType: "bike_walk", carDistanceWeekly: 0, flightShortDuration: 0, flightLongDuration: 0, electricitySource: "mixed", heatingSource: "electric_heating", shoppingHabits: "minimal" } });
 
     // Mock failure
-    (global.fetch as any).mockRejectedValueOnce(new Error("Network Error"));
+    (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("Network Error"));
     await useEcoStore.getState().fetchInsights();
     expect(useEcoStore.getState().insightsLoading).toBe(false);
     expect(useEcoStore.getState().insightsError).toBeNull();
@@ -196,7 +196,6 @@ describe("Zustand EcoStore Tests", () => {
   it("should test streak update logic (same day, next day, miss)", () => {
     // Initial log
     useEcoStore.getState().logActivity({ category: "food", subcategory: "vegan_meal", quantity: 1, unit: "meals" });
-    const today = useEcoStore.getState().streaks.lastLoggedDate;
     expect(useEcoStore.getState().streaks.currentStreak).toBe(1);
 
     // Same day log should maintain streak
