@@ -14,6 +14,9 @@ const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 30;
 
 export async function POST(req: NextRequest) {
+  let parsedMessage = "";
+  let parsedProfile: any = null;
+  
   try {
     // 1. Rate Limiting
     const ip = req.headers.get("x-forwarded-for") || "unknown";
@@ -35,6 +38,8 @@ export async function POST(req: NextRequest) {
     // 2. Parse Request
     const body = await req.json();
     const { message, history, profile } = body;
+    parsedMessage = message;
+    parsedProfile = profile;
 
     if (!message || !profile) {
       return NextResponse.json(
@@ -116,9 +121,8 @@ Your Task:
   } catch (err: unknown) {
     console.error("Gemini Chat API Error:", err instanceof Error ? err.message : err);
     // Graceful fallback — always give the user a local response rather than a 500
-    const body2 = req.body ? await req.json().catch(() => ({})) : {};
-    const msg = (body2 as { message?: string }).message ?? "";
-    const prof = (body2 as { profile?: { location?: string; householdSize?: number } }).profile;
+    const msg = parsedMessage || "";
+    const prof = parsedProfile;
     const clean = msg.toLowerCase();
     let fallbackReply = "";
     if (clean.includes("bike") || clean.includes("walk") || clean.includes("bus") || clean.includes("train")) {

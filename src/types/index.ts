@@ -45,6 +45,16 @@ export interface ActionState {
   updatedAt: string;
 }
 
+export interface Goal {
+  id: string;
+  title: string;
+  targetCo2e: number;
+  currentCo2e: number;
+  startDate: string;
+  endDate: string;
+  status: "active" | "completed" | "cancelled";
+}
+
 export interface EcoState {
   userProfile: UserProfile | null;
   onboardingProgress: Partial<UserProfile>;
@@ -54,6 +64,7 @@ export interface EcoState {
   insightsError: string | null;
   streaks: HabitStreak;
   actionsState: Record<string, "started" | "completed">;
+  goals: Goal[];
   
   // Actions
   setOnboardingProgress: (progress: Partial<UserProfile>) => void;
@@ -69,4 +80,9 @@ export interface EcoState {
   
   toggleAction: (actionId: string, status: "started" | "completed" | "available") => void;
   updateStreaks: () => void;
+  
+  // Goals
+  addGoal: (goal: Omit<Goal, "id" | "status" | "currentCo2e">) => void;
+  updateGoalProgress: (id: string, currentCo2e: number) => void;
+  completeGoal: (id: string) => void;
 }

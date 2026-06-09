@@ -8,6 +8,7 @@ import ActivityLogger from "@/components/dashboard/ActivityLogger";
 import ActivityHistory from "@/components/dashboard/ActivityHistory";
 import AIInsightsSection from "@/components/insights/AIInsightsSection";
 import ActionLibrarySection from "@/components/dashboard/ActionLibrarySection";
+import GoalProgress from "@/components/dashboard/GoalProgress";
 import { Leaf, LayoutDashboard, CalendarDays, Award, Settings, LogOut, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -154,6 +155,9 @@ export default function Dashboard() {
 
               {/* Recharts section */}
               <BreakdownCharts />
+
+              {/* Goal Progress section */}
+              <GoalProgress />
             </div>
           )}
 

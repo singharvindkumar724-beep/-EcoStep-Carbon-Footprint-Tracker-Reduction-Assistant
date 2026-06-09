@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 import { get, set, del } from "idb-keyval";
-import { EcoState, ActivityLog } from "../types";
+import { EcoState, ActivityLog, Goal } from "../types";
 import { calculateActivityEmissions } from "../services/carbonCalculator";
 
 // Custom IndexedDB storage adapter for Zustand persist
@@ -60,6 +60,7 @@ export const useEcoStore = create<EcoState>()(
         lastLoggedDate: null,
       },
       actionsState: {},
+      goals: [],
 
       setOnboardingProgress: (progress) =>
         set((state) => ({
@@ -80,6 +81,7 @@ export const useEcoStore = create<EcoState>()(
           insights: [],
           streaks: { currentStreak: 0, bestStreak: 0, lastLoggedDate: null },
           actionsState: {},
+          goals: [],
         })),
 
       logActivity: (activityData) => {
@@ -196,6 +198,32 @@ export const useEcoStore = create<EcoState>()(
           },
         }));
       },
+      
+      addGoal: (goalData) => {
+        const newGoal: Goal = {
+          id: Math.random().toString(36).substring(2, 9),
+          ...goalData,
+          currentCo2e: 0,
+          status: "active",
+        };
+        set((state) => ({ goals: [...state.goals, newGoal] }));
+      },
+
+      updateGoalProgress: (id, currentCo2e) => {
+        set((state) => ({
+          goals: state.goals.map((g) =>
+            g.id === id ? { ...g, currentCo2e } : g
+          ),
+        }));
+      },
+
+      completeGoal: (id) => {
+        set((state) => ({
+          goals: state.goals.map((g) =>
+            g.id === id ? { ...g, status: "completed" } : g
+          ),
+        }));
+      },
     }),
     {
       name: "ecostep-storage",
@@ -207,6 +235,7 @@ export const useEcoStore = create<EcoState>()(
         insights: state.insights,
         streaks: state.streaks,
         actionsState: state.actionsState,
+        goals: state.goals,
       }),
     }
   )
