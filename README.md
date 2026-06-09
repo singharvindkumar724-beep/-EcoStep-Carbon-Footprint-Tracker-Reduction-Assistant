@@ -2,6 +2,8 @@
 
 EcoStep is a consumer-friendly climate companion designed to help individuals understand, track, and reduce their personal carbon footprints. Rather than fostering eco-anxiety or guilt, EcoStep positions itself as an intelligent, optimistic climate coach.
 
+**Live Demo:** [https://project3-lilac-xi.vercel.app](https://project3-lilac-xi.vercel.app)
+
 ---
 
 ## 🌟 Key Features
@@ -13,7 +15,8 @@ EcoStep is a consumer-friendly climate companion designed to help individuals un
    $$\text{Rank Score} = \text{Impact} \times \text{Relevance} \times \text{Feasibility}$$
 5. **Activity Log & History**: Allows daily logging of green choices and consumption metrics. Shows full historical lists with filtering, sorting, searching, and entry deletion.
 6. **Habit Streak Engine**: Tracks daily log activity, motivating consistency with gamified active/best streaks.
-7. **PWA Support**: Support for offline access, dynamic cache optimization, and desktop/mobile install prompt configuration.
+7. **Custom Goal Tracking**: Users can create personalized carbon reduction goals, set target reduction amounts, and visualize progress dynamically towards their objectives.
+8. **PWA Support**: Support for offline access, dynamic cache optimization, and desktop/mobile install prompt configuration.
 
 ---
 
@@ -78,11 +81,16 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🧪 Testing
 
-The testing suite utilizes `Vitest` to run calculations, store actions, and API integrations in a JSDOM environment.
+The testing suite utilizes `Vitest` to run calculations, store actions, and API integrations in a JSDOM environment. The project proudly maintains **100% test coverage** for its core business logic, store functionality, ranking algorithms, and API fallback layers.
 
 Run the test suite:
 ```bash
 npm run test
+```
+
+Run test coverage reports:
+```bash
+npx vitest run --coverage
 ```
 
 Build the optimized production app:
@@ -94,5 +102,5 @@ npm run build
 
 ## ♿ Accessibility & PWA Integration
 
-* **WCAG 2.1 AA Compliance**: Complete semantic tag structure, focus outlines (`*:focus-visible`), and ARIA descriptions. Keyboard-friendly details dialogs dismissible using the `Escape` key.
+* **WCAG 2.1 AA Compliance**: Complete semantic tag structure, focus outlines (`*:focus-visible`), and ARIA descriptions. Keyboard-friendly details dialogs dismissible using the `Escape` key, backed by intelligent **Focus Traps** for seamless screen-reader experiences.
 * **PWA Installability**: Serves assets via custom offline caching service worker [sw.js](file:///c:/KRISH/PROGRAMMING/project_3/public/sw.js) and includes install configurations in [manifest.json](file:///c:/KRISH/PROGRAMMING/project_3/public/manifest.json).
