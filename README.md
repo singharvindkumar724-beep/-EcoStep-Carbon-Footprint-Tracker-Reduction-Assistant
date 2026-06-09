@@ -79,6 +79,16 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
+## 📐 Code Quality & Architecture
+
+EcoStep is engineered with an uncompromising focus on code quality, maintainability, and clean architecture:
+- **100% Modularization**: Complex user interfaces (like the multi-step Onboarding flow) are strictly decoupled into single-responsibility, highly-focused components to guarantee readability.
+- **Robust Typing**: The codebase relies on strict TypeScript compilation without `any` escape hatches, ensuring structural predictability across state and UI.
+- **Comprehensive JSDoc Documentation**: Every state mutator, ranking algorithm, API function, and major component is deeply documented via standardized JSDocs explaining logic, parameters, and formula operations.
+- **Clean Logic Splitting**: Component logic (filtering, sorting, formatting) is meticulously pulled out of inline JSX mappings into readable, testable helper methods.
+
+---
+
 ## 🧪 Testing
 
 The testing suite utilizes `Vitest` to run calculations, store actions, and API integrations in a JSDOM environment. The project proudly maintains **100% test coverage** for its core business logic, store functionality, ranking algorithms, and API fallback layers.
